@@ -298,6 +298,10 @@ public:
         }
         windowHandle()->setSurfaceType(QWindow::VulkanSurface);
     }
+
+    QPaintEngine* paintEngine() const override {
+        return nullptr;
+    }
 };
 
 struct SoftwareRenderWidget : public RenderWidget {
@@ -634,9 +638,7 @@ bool GRenderWindow::InitRenderTarget() {
         }
         break;
     case Settings::GraphicsAPI::Vulkan:
-        if (!InitializeVulkan()) {
-            return false;
-        }
+        InitializeVulkan();
         break;
     }
 
@@ -723,13 +725,11 @@ bool GRenderWindow::InitializeOpenGL() {
 #endif
 }
 
-bool GRenderWindow::InitializeVulkan() {
+void GRenderWindow::InitializeVulkan() {
     auto child = new VulkanRenderWidget(this);
     child_widget = child;
     child_widget->windowHandle()->create();
     main_context = std::make_unique<DummyContext>();
-
-    return true;
 }
 
 void GRenderWindow::InitializeSoftware() {

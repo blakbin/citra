@@ -78,4 +78,4 @@
     url = https://github.com/KhronosGroup/Vulkan-Headers
 [submodule "sirit"]
     path = externals/sirit
-    url = https://github.com/GPUCode/sirit
+    url = https://github.com/yuzu-emu/sirit
