@@ -281,6 +281,7 @@ if (CITRA_BUNDLE_LIBRARIES)
         -DTYPE=qt
         -DEXECUTABLE_PATH=$<TARGET_FILE:citra-qt>
         -DBUNDLE_PATH=${BUNDLE_DIR}
+        -DVULKAN_SDK_PATH=${VULKAN_SDK_PATH}
         -P ${CMAKE_SOURCE_DIR}/CMakeModules/BundleLibraries.cmake
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 endif()
