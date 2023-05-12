@@ -487,6 +487,13 @@ FramebufferLayout FrameLayoutFromResolutionScale(u32 res_scale, bool is_secondar
             layout = MobileLandscapeFrameLayout(
                 width, height, Settings::values.swap_screen.GetValue(), 2.25f, false);
             break;
+        case Settings::LayoutOption::CustomLayout:
+            layout = CustomFrameLayout(std::max(Settings::values.custom_top_right.GetValue(),
+                                                Settings::values.custom_bottom_right.GetValue()),
+                                       std::max(Settings::values.custom_top_bottom.GetValue(),
+                                                Settings::values.custom_bottom_bottom.GetValue()),
+                                       Settings::values.swap_screen.GetValue());
+            break;
         case Settings::LayoutOption::Default:
         default:
             if (Settings::values.upright_screen.GetValue()) {

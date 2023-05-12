@@ -217,6 +217,10 @@ void EmuWindow::UpdateCurrentFramebufferLayout(unsigned width, unsigned height,
             layout = Layout::MobileLandscapeFrameLayout(
                 width, height, Settings::values.swap_screen.GetValue(), 2.25f, false);
             break;
+        case Settings::LayoutOption::CustomLayout:
+            layout =
+                Layout::CustomFrameLayout(width, height, Settings::values.swap_screen.GetValue());
+            break;
         case Settings::LayoutOption::Default:
         default:
             layout =
