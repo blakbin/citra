@@ -93,22 +93,28 @@ function(download_qt_external target prefix_var)
     set(${prefix_var} "${prefix}" PARENT_SCOPE)
 endfunction()
 
-function(download_moltenvk sdk_path_var)
-    set(VULKAN_SDK_DIR "${CMAKE_BINARY_DIR}/externals/vulkan-sdk")
-    set(VULKAN_SDK_DMG "${CMAKE_BINARY_DIR}/externals/vulkan-sdk.dmg")
-    if (NOT EXISTS ${VULKAN_SDK_DIR})
-        if (NOT EXISTS ${VULKAN_SDK_DMG})
-            file(DOWNLOAD https://sdk.lunarg.com/sdk/download/latest/mac/vulkan-sdk.dmg ${VULKAN_SDK_DMG} SHOW_PROGRESS)
-        endif()
-
-        execute_process(COMMAND hdiutil attach ${VULKAN_SDK_DMG})
-        execute_process(COMMAND
-            /Volumes/VulkanSDK/InstallVulkan.app/Contents/MacOS/InstallVulkan install
-            --root "${VULKAN_SDK_DIR}" --accept-licenses --confirm-command --default-answer com.lunarg.vulkan.core)
-        execute_process(COMMAND hdiutil detach "/Volumes/VulkanSDK")
+function(download_moltenvk)
+    if (IOS)
+        set(MOLTENVK_PLATFORM "iOS")
+    else()
+        set(MOLTENVK_PLATFORM "macOS")
     endif()
 
-    set(${sdk_path_var} "${VULKAN_SDK_DIR}" PARENT_SCOPE)
+    set(MOLTENVK_DIR "${CMAKE_BINARY_DIR}/externals/MoltenVK")
+    set(MOLTENVK_TAR "${CMAKE_BINARY_DIR}/externals/MoltenVK.tar")
+    if (NOT EXISTS ${MOLTENVK_DIR})
+        if (NOT EXISTS ${MOLTENVK_TAR})
+            file(DOWNLOAD https://github.com/KhronosGroup/MoltenVK/releases/latest/download/MoltenVK-all.tar
+                ${MOLTENVK_TAR} SHOW_PROGRESS)
+        endif()
+
+        execute_process(COMMAND ${CMAKE_COMMAND} -E tar xf "${MOLTENVK_TAR}"
+            WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/externals")
+    endif()
+
+    # Add the MoltenVK library path to the prefix so find_library can locate it.
+    list(APPEND CMAKE_PREFIX_PATH "${MOLTENVK_DIR}/MoltenVK/dylib/${MOLTENVK_PLATFORM}")
+    set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} PARENT_SCOPE)
 endfunction()
 
 function(get_external_prefix lib_name prefix_var)
